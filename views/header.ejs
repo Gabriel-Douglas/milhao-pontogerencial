@@ -1,0 +1,69 @@
+        <!-- MENU SUPERIOR -->
+        <header class="p-3 bg-dark text-white">
+            <div class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                        <img src="/stylesheets/image/Milhão/milhao.png" alt="" width="50px" height="50px">
+                    </a>
+
+                    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                        <li><a href="/" class="nav-link px-2 text-white">Ajuste de Ponto</a></li>
+                        <li><a href="/dashboard" class="nav-link px-2 text-white">Dashboard</a></li>
+                        <% if (adm) { %>
+                            <li><a href="/registration" class="nav-link px-2 text-white">Cadastro do Funcionário</a></li>
+                        <% } %>
+                        <% if (adm) { %>
+                            <li><a href="/beneficios" class="nav-link px-2 text-white">Benefícios e Obrigações</a></li>
+                        <% } %>
+
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="btnRelatorios" data-bs-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                        Relatórios
+                                    </button>
+                            <div class="dropdown-menu" aria-labelledby="btnRelatorios">
+ 
+                                <% var grupoFuncionario = false %>
+                                <% var grupoGerencial = false %> 
+                                <% var grupoAdmPessoal = false %> 
+
+                                <% relatorios.forEach(function(rel) { %>
+
+                                    <% if (rel.GRUPO === 'Funcionários' && grupoFuncionario == false) { %>
+                                        <h6 class="dropdown-header">Assinaturas</h6>
+                                        <% grupoFuncionario = true %> 
+                                    <% } %>
+
+                                    <% if (rel.GRUPO === 'Gerencial' && grupoGerencial == false) { %>
+                                        <h6 class="dropdown-header">Gerencial</h6>
+                                        <% grupoGerencial = true %> 
+                                    <% } %>
+
+                                    <% if (rel.GRUPO === 'Adm. Pessoal' && grupoAdmPessoal == false) { %>
+                                        <h6 class="dropdown-header">Administração de Pessoal</h6>
+                                        <% grupoAdmPessoal = true %> 
+                                    <% } %>
+
+                                    <a class="dropdown-item" onclick=<%= rel.FUNCAO %>><%= rel.NOME %> </a>
+
+                                <% }) %>
+                            </div>
+                        </div>
+
+                    </ul>
+
+                    <div class="col-3">
+                        
+                        <% if(usuario) { %>
+                            <label style="color:white"><%=usuario%></label>
+                        <%}%>
+
+                    </div>
+
+                    <form action="/logout">
+                        <button type="submit" class="btn btn-warning">Sair</button>
+                    </form>
+
+                </div>
+            </div>
+        </header>

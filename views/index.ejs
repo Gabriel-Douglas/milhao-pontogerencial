@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- BOOTSTRAP -->
+    <link rel="stylesheet" href="/stylesheets/bootstrap-5.1.3-dist/css/bootstrap.css"></link> 
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
+    <script src="/stylesheets/bootstrap-5.1.3-dist/js/bootstrap.js"></script>   
+
+    <script src="/javascript/tabela.js" defer></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script>
+        var optionsCache = [];
+
+        function filterItems(el) {
+            var value = el.value.toLowerCase();
+            var sel = document.getElementById('selectFuncionarios')
+            var opt;
+
+            if (value == '') {
+                //restoreOptions();
+                carregarFuncionarios()  
+            } else {
+                for (var i=sel.length-1; i>=0; i--) {
+                    opt = sel.getElementsByTagName('option')[i];
+                    if (opt.text.toLowerCase().indexOf(value) == -1){
+                        sel.removeChild(opt)
+                    }
+                }
+            }
+        }
+
+        // Restore select to original state
+        function restoreOptions(){
+            var sel = document.getElementById('selectFuncionarios');
+            sel.length = 0;
+            let option;
+            
+            for (var i=0, iLen=optionsCache.length; i<iLen; i++) {
+                option = document.createElement('option');
+                optio.text = "teste"
+                sel.add(option);
+            }
+        }
+
+
+        window.onload = function() {
+            // Load cache
+            var sel = document.getElementById('selectFuncionarios');
+            for (var i=0, iLen=sel.length; i<iLen; i++) {
+                optionsCache.push(sel.getElementsByTagName('option')[i]);
+            }
+
+            alert(optionsCache.length)
+        }
+
+    </script>
+
+    <style>
+        
+        /* Style the header */
+        .header {
+            padding: 10px 16px;
+            background: black;
+            color: #f1f1f1;
+        }
+    </style>
+
+    <title>Ponto Gerencial Milhão</title>
+</head>
+
+<body onload="loadIndex()">
+
+    <div class="container-fluid">
+
+        <%- include('./header'); %>
+
+        <br><br>
+
+        <!-- FILTROS -->
+        <div class="container" id="divFiltros">
+            <div class="row align-items-center">
+                <div class="col-sm-8">
+                    <!-- FUNCIONARIO -->
+                    <h3>Selecione o funcionário:</h3>
+                    <div class="col">
+                        
+                        <div class="form-group">
+                        <label for="">Funcionário:</label>
+                        <input type="text" class="form-control" style="width: 250px;" id="searchFilter" name="searchFilter" placeholder="Procurar" onkeyup="filterItems(this);">
+                        <p>Digite para filtrar os funcionários, para começar de novo, apague tudo.</p>
+            
+                        <select onchange="atualizarMarcacoes()" class="form-control" name = "selFunctionarios" id="selectFuncionarios"></select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- PRIMEIRA DATA -->
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="">Data Inicial</label>
+                                <input type="date" class="form-control" id="txtDataInicial" placeholder="dd/mm/aaaa">
+                            </div>
+                        </div>
+
+                        <!-- SEGUNDA DATA -->
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="">Data Final</label>
+                                <input type="date" class="form-control" name="" id="txtDataFinal" placeholder="dd/mm/aaaa">
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <!-- ATUALIZAR DATA -->
+                    <div class="row">
+                        <div class="col-sm-auto">
+                            <button type="submit" class="btn btn-success" onclick="tableCreate()">Atualizar</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-4" id="divGrafico">
+                    
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="container" id="">
+            <div class="row" id = "divtabela" name="tabelamarcacoes">
+                <!-- TABELA DAS MARCAÇÕES VEM AQUI -->
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
+

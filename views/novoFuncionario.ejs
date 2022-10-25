@@ -1,0 +1,520 @@
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Cadastro do Funcionário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-3">
+                        <input type="text" class="form-control" placeholder="MATRICULA" aria-label="MATRICULA" id="matriculafuncionario">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="NOME COMPLETO" aria-label="NOME COMPLETO" id="nomefuncionario">
+                    </div>
+                </div>
+                <br>
+                <div class="row g-3">
+                    <div class="col">
+                        <div class="form-group">
+                        <select class="form-control" name="" id="selectCargos">
+
+                        </select>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row g-3">
+                    <div class="col">
+                        <div class="form-group">
+                        <select class="form-control" name="" id="selectDepartamentos">
+
+                        </select>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <input type="number" class="form-control" placeholder="CDC" aria-label="CDC" id="cdcfuncionario">
+                    </div>
+                </div>
+                <br>
+                <div class="row g-3">
+                    <div class="col">
+                        <div class="form-group">
+                        <select class="form-control" name="" id="selectGerentes">
+
+                        </select>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row g-3">
+                    <div class="col">
+                        <label for="inputPERICULOSIDADE">PERICULOSIDADE</label>
+                        <input type="checkbox" name="" id="inputPERICULOSIDADE">
+                    </div>
+                    <div class="col">
+                        <label for="inputINSALUBRIDADE">INSALUBRIDADE</label>
+                        <input type="checkbox" name="" id="inputINSALUBRIDADE">
+                    </div>
+                </div>
+                <br>
+                <div class="row g-3">
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">R$</span>
+                            <input type="number" class="form-control" placeholder="SALÁRIO" id="salariofuncionario">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <select class="form-control" name="" id="selectstatus">
+                                <option disabled selected>STATUS:</option>
+                                <option value = "1" id = 'status-1'>ATIVO</option>
+                                <option value = "0" id = 'status-0'>BLOQUEADO</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer" id="botoesAcao">
+                <!-- <button type="button" class="btn btn-success" onclick="InserirFuncionario('inserir')">Salvar</button> -->
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+            <br>
+
+            <!-- DIV PARA RECEBER MENSAGEM DA AÇÃO -->
+            <div class="container-fluid">
+                <div class="col" id="mensagem">
+                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    function limparModal(){
+
+        document.getElementById("matriculafuncionario").value = ""
+        document.getElementById("matriculafuncionario").disabled = false;
+        document.getElementById("nomefuncionario").value = "";
+        document.getElementById('selectCargos').getElementsByTagName('option')[0].selected = true;
+        document.getElementById('selectDepartamentos').getElementsByTagName('option')[0].selected = true;
+        document.getElementById("cdcfuncionario").value = "";
+        document.getElementById('selectGerentes').getElementsByTagName('option')[0].selected = true;
+        document.getElementById("inputPERICULOSIDADE").checked = false;
+        document.getElementById("inputINSALUBRIDADE").checked = false;
+        document.getElementById("salariofuncionario").value = "";
+        document.getElementById('selectstatus').getElementsByTagName('option')[0].selected = true;
+
+        var alertElement = document.getElementById("divAlert");
+        if(typeof(alertElement) != 'undefined' && alertElement != null){
+            alertElement.remove()
+        } 
+
+        var btnAcaoElement = document.getElementById("btnAcaoModal");
+        if(typeof(btnAcaoElement) != 'undefined' && btnAcaoElement != null){
+            btnAcaoElement.remove()
+        } 
+
+    }
+
+    //CARREGAR CARGOS    
+    let CargosSelect = document.getElementById('selectCargos');
+    CargosSelect.length = 0;
+    
+    let defaultOption = document.createElement('option');
+    defaultOption.setAttribute("value","titulo");
+    defaultOption.text = 'CARGOS:';
+    defaultOption.disabled = true;
+    defaultOption.selected = true
+
+    CargosSelect.add(defaultOption);
+    
+    var url = '/cargos';
+    
+    fetch(url)  
+        .then(  
+        function(response) {  
+            if (response.status !== 200) {  
+            console.warn('Ocorreu algum problema. Status Code: ' + response.status);  
+            return;  
+            }
+    
+            // Examine the text in the response  
+            response.json().then(function(data) {  
+            let option;
+        
+            for (let i = 0; i < data.length; i++) {
+                option = document.createElement('option');
+                option.text = data[i].NOME;
+                option.value = data[i].ID;
+                option.id =  'cargo-' + data[i].ID;
+                CargosSelect.add(option);
+            }    
+            });  
+        }  
+        )  
+        .catch(function(err) {  
+        console.error('Fetch Error -', err);  
+        });
+
+
+
+    //CARREGAR DEPARTAMENTOS
+    let DepartamentosSelect = document.getElementById('selectDepartamentos');
+    DepartamentosSelect.length = 0;
+    
+    let defaultOptionDepart = document.createElement('option');
+    defaultOptionDepart.setAttribute("value","titulo");
+    defaultOptionDepart.text = 'DEPARTAMENTOS:';
+    defaultOptionDepart.disabled = true;
+    defaultOptionDepart.selected = true
+
+    DepartamentosSelect.add(defaultOptionDepart);
+    
+    var url = '/departamentos';
+    
+    fetch(url)  
+        .then(  
+        function(response) {  
+            if (response.status !== 200) {  
+            console.warn('Ocorreu algum problema. Status Code: ' + response.status);  
+            return;  
+            }
+    
+            // Examine the text in the response  
+            response.json().then(function(departamentos) {  
+            let optionDepart;
+        
+            for (let i = 0; i < departamentos.length; i++) {
+                optionDepart = document.createElement('option');
+                optionDepart.text = departamentos[i].NOME;
+                optionDepart.value = departamentos[i].ID;
+                optionDepart.id = 'departamento-'+departamentos[i].ID;
+                DepartamentosSelect.add(optionDepart);
+            }    
+            });  
+        }  
+        )  
+        .catch(function(err) {  
+        console.error('Fetch Error -', err);  
+        });
+    
+
+    //CARREGAR GERENTES
+    let GerentesSelect = document.getElementById('selectGerentes');
+    GerentesSelect.length = 0;
+    
+    let defaultOptionGer = document.createElement('option');
+    defaultOptionGer.setAttribute("value","titulo");
+    defaultOptionGer.text = 'GERENTES:';
+    defaultOptionGer.disabled = true;
+    defaultOptionGer.selected = true
+
+    GerentesSelect.add(defaultOptionGer);
+    
+    var url = '/usuarios';
+    
+    fetch(url)  
+        .then(  
+        function(response) {  
+            if (response.status !== 200) {  
+            console.warn('Ocorreu algum problema. Status Code: ' + response.status);  
+            return;  
+            }
+    
+            // Examine the text in the response  
+            response.json().then(function(gerentes) {  
+            let optionGer;
+        
+            for (let i = 0; i < gerentes.length; i++) {
+                optionGer = document.createElement('option');
+                optionGer.text = gerentes[i].NOME;
+                optionGer.value = gerentes[i].CPF;
+                optionGer.id = 'gerente-'+gerentes[i].CPF;
+                GerentesSelect.add(optionGer);
+            }    
+            });  
+        }  
+        )  
+        .catch(function(err) {  
+        console.error('Fetch Error -', err);  
+        });
+    
+function InserirFuncionario(acao){
+
+    var matriculaFuncionario = document.getElementById("matriculafuncionario").value
+    var nomeFuncionario = document.getElementById("nomefuncionario").value
+    var cdcFuncionario = document.getElementById("cdcfuncionario").value
+    var salarioFuncionario = document.getElementById("salariofuncionario").value
+
+    var cargos = document.getElementById('selectCargos');
+    var idCargo = cargos.options[cargos.selectedIndex].value;
+
+    var departamentos = document.getElementById('selectDepartamentos');
+    var idDepartamento = departamentos.options[departamentos.selectedIndex].value;
+
+    var gerente = document.getElementById('selectGerentes');
+    var cpfGerente = gerente.options[gerente.selectedIndex].value;
+
+    if(document.getElementById("inputPERICULOSIDADE").checked){
+        var peri = 1
+    }else{
+        var peri = 0
+    }
+
+    if(document.getElementById("inputINSALUBRIDADE").checked){
+        var insa = 1
+    }else{
+        var insa = 0
+    }  
+
+    var status = document.getElementById('selectstatus');
+    var valStatus = status.options[status.selectedIndex].value;
+
+    var localAlert = document.getElementById("mensagem");
+
+    var msgValidacao = "";
+    //VALIDAÇÕES
+    //VERIFICAR SE TODOS OS CAMPOS ESTÃO PREENCHIDOS
+
+    if(matriculaFuncionario === '') msgValidacao = msgValidacao + "PREENCHER MATRICULA" + "\n"
+    if(nomeFuncionario === '') msgValidacao = msgValidacao + "PREENCHER NOME" + "\n"
+    if(cdcFuncionario === '') msgValidacao = msgValidacao + "PREENCHER CDC" + "\n"
+    if(salarioFuncionario === '') msgValidacao = msgValidacao + "PREENCHER SALARIO" + "\n"
+    if(idCargo === 'titulo') msgValidacao = msgValidacao + "SELECIONE O CARGO" + "\n"
+    if(idDepartamento === 'titulo') msgValidacao = msgValidacao + "SELECIONE O DEPARTAMENTO" + "\n"
+    if(cpfGerente === 'titulo') msgValidacao = msgValidacao + "SELECIONE O GERENTE" + "\n"
+    if(valStatus === '') msgValidacao = msgValidacao + "SELECIONE O STATUS" + "\n"
+
+
+    if(matriculaFuncionario.length < 6 || matriculaFuncionario.length > 6) msgValidacao = msgValidacao + "A MATRICULA TEM QUE TER 6 DÍGITOS EX: '001234'" + "\n"
+    if(cdcFuncionario.length < 6 || cdcFuncionario.length > 6) msgValidacao = msgValidacao + "O CDC TEM QUE TER 6 DÍGITOS EX: '001234'" + "\n"
+
+    if(msgValidacao.length > 0) {
+        BootstrapAlert("atencao",msgValidacao,localAlert)
+        return;
+    }
+
+    var dadosFuncionario = {
+        matricula: matriculaFuncionario,
+        nome: nomeFuncionario.toUpperCase(),
+        cargo: idCargo,
+        departamento: idDepartamento,
+        cdc: cdcFuncionario,
+        apontador: cpfGerente,
+        periculosidade: peri,
+        insalubridade: insa,
+        salario: salarioFuncionario,
+        status: valStatus
+    }
+    
+    //INSERIR NO BANCO
+    if(acao === 'inserir') var url = '/inserirFuncionario';
+    if(acao === 'editar') var url = '/editarFuncionario'
+    if(acao === 'excluir') var url = '/excluirFuncionario'
+
+    //MANDANDO POST DE CRIAÇÃO DE LANÇAMENTO PARA O SERVIDOR
+    var xhr = new XMLHttpRequest();
+    try {
+
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Accept", "application/json");
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function() { // Call a function when the state changes.
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+
+                switch(xhr.responseText) {
+                    case 'INSERT - SUCESS':
+                        BootstrapAlert("sucesso","FUNCIONÁRIO INSERIDO COM SUCESSO",localAlert);
+                        break;
+                    case 'INSERT - FAIL':
+                        BootstrapAlert("erro","FALHA AO INSERIR O FUNCIONÁRIO, ATUALIZE A PÁGINA E TENTE NOVAMENTE",localAlert);
+                        break;
+                    case 'UPDATE - SUCESS':
+                        BootstrapAlert("sucesso","FUNCIONÁRIO ATUALIZADO COM SUCESSO",localAlert);
+                        break;
+                    case 'UPDATE - FAIL':
+                        BootstrapAlert("erro","FALHA AO ATUALIZAR O FUNCIONÁRIO, ATUALIZE A PÁGINA E TENTE NOVAMENTE",localAlert);
+                        break;
+                    case 'DELETE - SUCESS':
+                        BootstrapAlert("sucesso","FUNCIONÁRIO DELETADO COM SUCESSO",localAlert);
+                        break;
+                    case 'DELETE - FAIL':
+                        BootstrapAlert("erro","FALHA AO DELETAR O FUNCIONÁRIO, ATUALIZE A PÁGINA E TENTE NOVAMENTE",localAlert);
+                        break;
+                    case 'DUPLICADO':
+                        BootstrapAlert("erro",'ATENÇÃO! ESTE FUNCIONÁRIO JÁ EXISTE',localAlert);
+                        break;
+                    case 'NO DATA':
+                        BootstrapAlert("erro",'O FUNCIONÁRIO NÃO EXISTE',localAlert);
+                        break;
+                    default:
+                    alert (xhr.responseText);
+                    break;
+                }
+            }
+        }
+
+        xhr.send(JSON.stringify(dadosFuncionario));
+
+    } catch (error) {
+        alertErro();
+        alert(error);
+        return;
+    }
+    
+
+}
+
+function adicionarBotao(acao){
+    //  <button type="button" class="btn btn-success" onclick="InserirFuncionario('inserir')">Salvar</button>
+    var divBtns = document.getElementById("botoesAcao");
+    var newBtn = document.createElement("button");
+    newBtn.type = "button";
+    newBtn.id = "btnAcaoModal";
+    newBtn.classList.add("btn");
+    newBtn.classList.add("btn-success");
+
+    switch (acao) {
+        case "inserir":
+            newBtn.onclick = function() { InserirFuncionario('inserir'); }
+            newBtn.textContent = "Inserir";
+            break;
+        
+        case "editar":
+            newBtn.onclick = function() { InserirFuncionario('editar'); }
+            newBtn.textContent = "Editar";
+
+            //BOTÃO DE EXCLUIR
+            var ExcluirBtn = document.createElement("button");
+            ExcluirBtn.type = "button";
+            ExcluirBtn.id = "btnExcluir";
+            ExcluirBtn.classList.add("btn");
+            ExcluirBtn.classList.add("btn-danger");
+            ExcluirBtn.onclick = function() { InserirFuncionario('excluir'); }
+            ExcluirBtn.textContent = "Excluir";    
+            divBtns.appendChild(ExcluirBtn);        
+            break;
+    
+        default:
+            break;
+    }
+
+    divBtns.appendChild(newBtn);
+}
+
+function NovoFuncionario(){
+
+    limparModal()
+    adicionarBotao('inserir');
+
+return
+}
+
+function EditarFuncionario(idButton){
+
+    limparModal()
+    adicionarBotao('editar');
+
+    //ATUALIZAR MODAL COM OS VALORES DA TABELA
+    var matriculaFuncionario = idButton.split("-", 2)[1];
+    trFuncionario = document.getElementById(matriculaFuncionario);
+
+    var nomeFuncionario = trFuncionario.getElementsByTagName("td")[1].textContent;
+    var cdcFuncionario =  trFuncionario.getElementsByTagName("td")[3].textContent;
+    var salarioFuncionario = trFuncionario.getElementsByTagName("td")[5].textContent;
+    var idCargo = trFuncionario.getElementsByTagName("td")[2].id;
+    var idDepartamento = trFuncionario.getElementsByTagName("td")[4].id;
+    var cpfGerente = trFuncionario.getElementsByTagName("td")[6].id;
+
+    if(trFuncionario.getElementsByTagName("input")[0].checked){
+        var peri = 1
+    }else{
+        var peri = 0
+    }
+
+    if(trFuncionario.getElementsByTagName("input")[1].checked){
+        var insa = 1
+    }else{
+        var insa = 0
+    }  
+
+    var valStatus = trFuncionario.getElementsByTagName("td")[9].textContent;
+
+    document.getElementById("matriculafuncionario").value = matriculaFuncionario;
+    document.getElementById("matriculafuncionario").disabled = true;
+    document.getElementById("nomefuncionario").value = nomeFuncionario;
+
+    var indexCargo = document.getElementById('selectCargos').getElementsByTagName('option')['cargo-'+idCargo].index;
+    document.getElementById('selectCargos').getElementsByTagName('option')[indexCargo].selected = true;
+
+    var indexDepartamento = document.getElementById('selectDepartamentos').getElementsByTagName('option')['departamento-'+idDepartamento].index;
+    document.getElementById('selectDepartamentos').getElementsByTagName('option')[indexDepartamento].selected = true;
+
+    document.getElementById("cdcfuncionario").value = parseInt(cdcFuncionario);
+
+    var indexGerente = document.getElementById('selectGerentes').getElementsByTagName('option')['gerente-'+cpfGerente].index;
+    document.getElementById('selectGerentes').getElementsByTagName('option')[indexGerente].selected = true;
+
+    if(peri == 1) document.getElementById('inputPERICULOSIDADE').checked = true
+    if(insa == 1) document.getElementById('inputINSALUBRIDADE').checked = true
+
+    document.getElementById("salariofuncionario").value = parseFloat(salarioFuncionario);
+
+    // alert(valStatus)
+    if(valStatus == 'ATIVO '){
+        document.getElementById('selectstatus').options[1].selected = true
+    }else{
+        document.getElementById('selectstatus').options[2].selected = true
+    }
+    //var indexStatus = document.getElementById('selectstatus').getElementsByTagName('option')['status-'+valStatus].index;
+    //document.getElementById('selectstatus').getElementsByTagName('option')[valStatus].selected = true;
+
+    return
+}
+
+function BootstrapAlert(tipo,msg,local){
+
+    var divAlert = document.createElement("div")
+    divAlert.classList.add("alert");
+
+    switch (tipo) {
+        case "sucesso":
+            divAlert.classList.add("alert-success");
+            break;
+        case "erro":
+            divAlert.classList.add("alert-danger");
+            break
+        case "atencao":
+            divAlert.classList.add("alert-warning")
+        default:
+            break;
+    }
+    
+    divAlert.setAttribute("id","divAlert");
+    divAlert.setAttribute("role","alert");
+
+    var txtArea = document.createElement("p");
+    txtArea.setAttribute('style', 'white-space: pre;');
+    txtArea.textContent = msg;
+
+    divAlert.appendChild(txtArea);
+    local.appendChild(divAlert);
+
+}
+
+$('#exampleModal').on('hidden.bs.modal', function () {
+    location.reload();
+});
+
+</script>

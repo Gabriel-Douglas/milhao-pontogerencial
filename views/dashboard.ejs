@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- BOOTSTRAP -->
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="/javascript/tabela.js" defer></script>
+    <script src="/javascript/dashboard.js" defer></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+
+    <!-- Custom fonts for this template-->
+    <link href="/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="/dash-css/sb-admin-2.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+    
+    <script>
+
+        // $(document).ready( function () {
+        //     $('#tblRanking').DataTable();
+        // } );
+
+    </script>
+
+    <title>Dashboard</title>
+</head>
+<body onload="onLoad()">
+
+    <div class="container-fluid" >
+        <%- include('./header'); %>
+    </div>
+
+    <br>
+
+    <div class="container-fluid">
+
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Imprimir Dashboard</a>
+        </div>
+
+        <div class="container-fluid">
+        
+            <div class="row justify-content-md-center">
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Horas Extras Acumuladas</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="labelTotalHoraExtra"></div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clock fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+    
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Valor Acumulado <i style="font-size: smaller;">aprox.</i></div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="labelValorHoraExtra"></div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                       Dias Restantes</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="labelDiasRestantes"></div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl col-lg">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                FILTROS
+                            </button>
+                        </h6>
+
+                        <div class="card-body">
+                            <div class="collapse" id="collapseExample">
+                                <div class="card card-body">
+                                    <form class="row g-3">
+                                        <div class="col" >
+                                            <div class="col-xs-1-12">
+
+                                                <div class="form-group">
+
+                                                    <div class="col">
+                                                        <label for="dataInicial" class="form-label">Data Inicial</label>
+                                                        <input type="date" class="form-control" id="dataInicial">
+                                                    </div>
+
+                                                    <div class="col">
+                                                        <label for="dataFinal" class="form-label">Data Final</label>
+                                                        <input type="date" class="form-control" id="dataFinal">
+                                                    </div>
+
+                                                </div>
+
+                                                <!-- <div class="form-group">
+
+                                                    <div class="col">
+                                                        <label for="ddGerentes" class="form-label">Gerente</label>
+                                                        <select class="form-control" name="" id="ddGerente" onchange="dropDepartamentos()" multiple>
+                                                            
+                                                            <% if (adm) { %>
+                                                                <option value="todos" selected>TODOS</option>
+                                                            <% } %>
+
+                                                            <% gerentes.forEach(i => { %>
+                                                                <option value="<%= i.CPF_APONTADOR %> "><%= i.APONTADOR %></option>
+                                                            <% }) %>
+                                                        </select>
+                                                    </div>
+
+                                                </div> -->
+
+                                                <div class="col">
+                                                    <button class="btn btn-primary" type="button" onclick="AtualizarGraficos()" >Atualizar</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col" >
+
+
+                                            <div class="col">
+                                                <label for="ddGerentes" class="form-label">Gerente</label>
+                                                <select class="form-control" name="" id="ddGerente">
+                                                    
+                                                    <% if (adm) { %>
+                                                        <option value="todos" selected>TODOS</option>
+                                                    <% } %>
+
+                                                    <% gerentes.forEach(i => { %>
+                                                        <option value="<%= i.CPF_APONTADOR %> "><%= i.APONTADOR %></option>
+                                                    <% }) %>
+                                                </select>
+                                            </div>
+
+                                            <!-- <div class="col">
+                                                <div class="form-group">
+                                                    <label for="ddDepartamento" class="form-label">Departamento</label>
+                                                    <select class="form-control" name="" id="ddDepartamento" onchange="AtualizarCargoGerente()" multiple>
+                                                        <option value="todos" selected>TODOS</option>
+                                                        <% departamentos.forEach(i => { %>
+                                                            <option value="<%= i.DEPARTAMENTO %>"><%= i.DEPARTAMENTO %></option>
+                                                        <% }) %>
+                                                    </select>
+                                                </div>
+                                            </div> -->
+
+                                            <!-- <div class="col">
+                                                <div class="form-group">
+                                                    <label for="ddCargo" class="form-label">Cargo</label>
+                                                    <select class="form-control" name="" id="ddCargo" multiple>
+                                                        <option value="todos" selected>TODOS</option>
+                                                        <% cargos.forEach(i => { %>
+                                                            <option value="<%= i.CARGO %>"><%= i.CARGO %></option>
+                                                        <% }) %>
+                                                    </select>
+                                                </div>
+                                            </div> -->
+
+                                        </div>
+                                    </form>
+
+                                </div>
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <div class="row">
+
+                <!-- Diário de Horas -->
+                <div class="col-xl-8 col-lg-7">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Diário de Horas</h6>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-area"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="GrafDiarioHoras" style="display: block; width: 824px; height: 300px;" width="824" height="300" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Horas por Departamento -->
+                <div class="col-xl-4 col-lg-5">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Acumulado de Horas por Departamento</h6>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-area"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="GrafHorasDepartamento" width="379" height="253" style="display: block; width: 379px; height: 253px;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Horas por Funcionário -->
+                <div class="col-lg-6 mb-4">                
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Acumulado de Horas por Funcionário</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-bar"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="GrafHorasFuncionario" width="824" height="320" style="display: block; width: 824px; height: 320px;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Horas por Cargo -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Acumulado de Horas por Cargos</h6>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-area"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="GrafHorasCargo" width="824" height="320" style="display: block; width: 824px; height: 320px;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Ranking de Horas Extras</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table" id="tblRanking">
+                                        <thead class="table-dark" style="text-align: center;">
+                                          <tr>
+                                            <th style="height: min-content; text-align: center;">RAINKING</th>
+                                            <th style="height: min-content; text-align: center;">NOME</th>
+                                            <th style="height: min-content; text-align: center;">CARGO</th>
+                                            <th style="height: min-content; text-align: center;">CDC</th>
+                                            <th style="height: min-content; text-align: center;">DEPARTAMENTO</th>
+                                            <th style="height: min-content; text-align: center;">TOTA DE HORAS</th>
+                                          </tr>
+                                        </thead>
+                                            <tbody id="tbody-ranking">
+
+                                            </tbody>
+                                      </table>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang='pt-BR'>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- BOOTSTRAP -->
+    <link rel="stylesheet" href="/stylesheets/bootstrap-5.1.3-dist/css/bootstrap.css">
+    <script src="/javascript/tabela.js" defer></script>
+
+    <title>Holerite horas complementares</title>
+
+    <style>
+        table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+          font-size: small;
+        }
+
+        .break { page-break-before: always; }        
+
+    </style>
+</head>
+
+<body>
+
+    <% var vlrHrEx1 = 0.0 %>
+    <% var vlrHrEx2 = 0.0 %> 
+    <% var vlrHrExNot1 = 0.0 %> 
+    <% var vlrHrExNot2 = 0.0 %>
+    <% var qtdVT = 0 %>
+    <% var vlrVT = 0.0 %>   
+
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-sm-auto" name="logoMilhao">
+                <img src="/stylesheets/image/Milhão/milhao.png" alt="" width="30px" height="30px">
+            </div>
+            <div class="col-sm">
+                <h3>FOLHA DE HORAS EXTRAS COMPLEMENTARES</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+
+        <% marcacoes.forEach(function(pontos, i, array) { %>
+        
+            <% var proximo = i + 1 %>
+            <% if (pontos.LINHA == 0) { %>
+
+                <div id='<%= pontos.MATRICULA_FUNC %>'>
+                    <div id='titulo-<%= pontos.MATRICULA_FUNC %>'>
+                        <div class="col" id='dadosFuncionario-<%= pontos.MATRICULA_FUNC %>'>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr style="background-color: grey; height: 20px;">
+                                        <th style="color: white;" width="40%">NOME</th>
+                                        <th style="color: white;" width="25%">CARGO</th>
+                                        <th style="color: white;" width="25%">DEPARTAMENTO</th>
+                                        <th style="color: white;">LÍQUIDO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong><%= pontos.NOME %></strong></td>
+                                        <td><strong><%= pontos.CARGO %></strong></td>
+                                        <td><strong><%= pontos.DEPARTAMENTO %></strong></td>
+
+                        </div>
+                    </div>
+                
+            <% } %>
+
+                                    <% vlrHrEx1 = vlrHrEx1 + pontos.HEX1 %>
+                                    <% vlrHrEx2 = vlrHrEx2 + pontos.HEX2 %> 
+                                    <% vlrHrExNot1 = vlrHrExNot1 + pontos.HEXN1 %> 
+                                    <% vlrHrExNot2 = vlrHrExNot2 + pontos.HEXN2 %>
+                                    <% qtdVT = qtdVT + pontos.VT %>
+                                    <% vlrVT = vlrVT + pontos.VALOR_VT %>  
+
+            <% if ((typeof(marcacoes[proximo]) !== 'undefined' && marcacoes[proximo].NOME !== pontos.NOME) || (i > 0 && i == (array.length -1)) ) { %>
+                                        
+                                        <% var total = ((pontos.SALARIO_TOTAL / 220 * 1.5 * (vlrHrEx1/60)) + (pontos.SALARIO_TOTAL / 220 * 2 * (vlrHrEx2/60)) + ((pontos.SALARIO_TOTAL * 1.2) / 220 * 1.5 * (vlrHrExNot1/60)) + ((pontos.SALARIO_TOTAL * 1.2) / 220 * 2 * (vlrHrExNot2/60))); %> 
+                                        <% var vlrDSR = total / diasUteis * diasInuteis %> 
+                                        <td colspan="6" style="text-align: center; background-color: grey; color: white"><strong><%= (total + vlrDSR + (vlrVT * 2)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); %></strong></td>
+
+                                    </tr>
+                                </tbody>
+
+                                <% vlrHrEx1 = 0 %>
+                                <% vlrHrEx2 = 0 %> 
+                                <% vlrHrExNot1 = 0 %> 
+                                <% vlrHrExNot2 = 0 %>
+                                <% qtdVT = 0 %>
+                                <% vlrVT = 0 %> 
+
+                            </table>
+                </div>
+            <% } %>
+
+        <% }); %>
+    </div>
+    
+</body>
+</html>
